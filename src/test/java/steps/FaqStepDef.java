@@ -11,19 +11,19 @@ public class FaqStepDef extends BaseStepDef {
     private final WebDriver driver = setUp();
     private Integer withFilterCount;
 
-    @Given("I am on the FaqPage")
+    @Given("открыта страница с частыми вопросами")
     public void i_am_on_the_faq_page() {
         driver.get("https://www.bspb.ru/retail/faq");
     }
 
-    @When("I click on the first block item and count faq")
+    @When("я нажимаю на первую тему и считаю количество частых вопросов")
     public void i_click_on_a_block_item_no() {
         FaqPage fp = new FaqPage(driver);
         fp.clickButtonBlock();
         withFilterCount = fp.countFaq();
     }
 
-    @Then("faq must be less than {int}")
+    @Then("количество частых вопросов должно быть меньше {int}")
     public void faq_must_be_less_than(Integer number) {
         Assert.assertTrue(withFilterCount < number);
         tearDown();

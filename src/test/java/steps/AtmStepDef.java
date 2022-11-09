@@ -11,19 +11,19 @@ public class AtmStepDef extends BaseStepDef {
     private final WebDriver driver = setUp();
     private Integer atmCount;
 
-    @Given("I am on the AtmPage")
+    @Given("открыта страница с адресами банкоматов")
     public void i_am_on_the_atm_page() {
         driver.get("https://www.bspb.ru/map?is=bankomats");
     }
 
-    @When("I click on the ATM list button")
+    @When("я кликаю на кнопку Списком")
     public void i_click_on_the_atm_list_button() {
         AtmPage ap = new AtmPage(driver);
         ap.clickAtmButton();
         atmCount = ap.countAtm();
     }
 
-    @Then("ATM must be equals {int}")
+    @Then("количество адресов банкоматов равно {int}")
     public void atm_must_be_equals(Integer number) {
         Assert.assertEquals(number, atmCount);
         tearDown();
