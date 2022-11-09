@@ -9,7 +9,6 @@ import org.pages.AtmPage;
 
 public class AtmStepDef extends BaseStepDef {
     private final WebDriver driver = setUp();
-    private Integer atmCount;
 
     @Given("открыта страница с адресами банкоматов")
     public void openAtmPage() {
@@ -20,12 +19,12 @@ public class AtmStepDef extends BaseStepDef {
     public void clickAtmBtn() {
         AtmPage ap = new AtmPage(driver);
         ap.clickAtmButton();
-        atmCount = ap.countAtm();
     }
 
     @Then("количество адресов банкоматов равно {int}")
-    public void atmMustBeEqualNumber(Integer number) {
-        Assert.assertEquals(number, atmCount);
+    public void atmMustBeEqualNumber(int number) {
+        AtmPage ap = new AtmPage(driver);
+        Assert.assertEquals(number, ap.countAtm());
         tearDown();
     }
 }

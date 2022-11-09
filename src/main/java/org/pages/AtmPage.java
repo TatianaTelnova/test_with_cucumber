@@ -18,6 +18,7 @@ public class AtmPage extends BasePage {
     }
 
     public void clickAtmButton() {
+        wait.until(visibilityOfElementLocated(BUTTON_TO_LIST));
         clickElem(BUTTON_TO_LIST);
     }
 

@@ -16,10 +16,15 @@ public class FaqStepDef extends BaseStepDef {
         driver.get("https://www.bspb.ru/retail/faq");
     }
 
-    @When("я нажимаю на первую тему и считаю количество частых вопросов")
+    @When("я нажимаю на первую тему")
     public void clickFirstBlockItemAndCountFaq() {
         FaqPage fp = new FaqPage(driver);
         fp.clickButtonBlock();
+    }
+
+    @When("считаю количество частых вопросов")
+    public void countFaq() {
+        FaqPage fp = new FaqPage(driver);
         withFilterCount = fp.countFaq();
     }
 

@@ -5,6 +5,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
+import org.pages.AtmPage;
 import org.pages.MainPage;
 
 public class MainStepDef extends BaseStepDef {
@@ -33,11 +34,20 @@ public class MainStepDef extends BaseStepDef {
     public void goToAtmPage() {
         MainPage mp = new MainPage(driver);
         mp.clickGoToAtm();
+//        AtmPage ap = new AtmPage(driver);
+//        ap.clickAtmButton();
     }
 
-    @Then("я проверяю что-то")
-    public void checkAnything() {
-        Assert.assertTrue(true);
+    @When("я снова кликаю на кнопку Списком")
+    public void  clickAtmBtn() {
+        AtmPage ap = new AtmPage(driver);
+        ap.clickAtmButton();
+    }
+
+    @Then("снова количество адресов банкоматов равно {int}")
+    public void atmMustBeEqualNumber(int number) {
+        AtmPage ap = new AtmPage(driver);
+        Assert.assertEquals(number, ap.countAtm());
         tearDown();
     }
 
