@@ -4,39 +4,36 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
-import org.openqa.selenium.WebDriver;
 import org.pages.FaqPage;
 
 public class FaqStepDef extends BaseStepDef {
-    private final WebDriver driver = setUp();
+    private FaqPage fp;
     private int elemCount;
 
     @Given("открыта страница с частыми вопросами")
     public void openFaqPage() {
+        setUp();
         driver.get("https://www.bspb.ru/retail/faq");
+        fp = new FaqPage(driver);
     }
 
     @When("нажимаю на первую тему")
     public void clickFirstBlockItemAndCountFaq() {
-        FaqPage fp = new FaqPage(driver);
         fp.clickButtonBlock();
     }
 
-    @When("считаю количество блоков тем")
+    @When("считаю (блоки тем)")
     public void countBlocks() {
-        FaqPage fp = new FaqPage(driver);
         elemCount = fp.countBlocks();
     }
 
-    @When("считаю количество частых вопросов")
+    @When("считаю (частые вопросы)")
     public void countFaq() {
-        FaqPage fp = new FaqPage(driver);
         elemCount = fp.countFaq();
     }
 
     @When("считаю количество отфильтрованных частых вопросов")
     public void countFaqWithFilter() {
-        FaqPage fp = new FaqPage(driver);
         elemCount = fp.countFaqWithFilter();
     }
 

@@ -1,11 +1,7 @@
 package steps;
 
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
-import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.pages.AtmPage;
 
 public class BaseStepDef {
     public WebDriver driver;

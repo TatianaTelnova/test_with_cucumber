@@ -10,18 +10,19 @@ import org.pages.FaqPage;
 import org.pages.MainPage;
 
 public class MainStepDef extends BaseStepDef {
-    private final WebDriver driver = setUp();
+    private MainPage mp;
     private int elemCount;
     private Boolean existElem;
 
     @Given("открыта главная страница")
     public void openMainPage() {
+        setUp();
         driver.get("https://www.bspb.ru/");
+        mp = new MainPage(driver);
     }
 
     @When("считаю количество элементов контента")
     public void countContentElems() {
-        MainPage mp = new MainPage(driver);
         elemCount = mp.countContentElems();
     }
 
@@ -33,7 +34,6 @@ public class MainStepDef extends BaseStepDef {
 
     @When("перехожу на страницу с банкоматами")
     public void goToAtmPage() {
-        MainPage mp = new MainPage(driver);
         mp.clickGoToAtm();
     }
 
@@ -52,13 +52,11 @@ public class MainStepDef extends BaseStepDef {
 
     @When("проверяю присутствие кнопки Войти")
     public void searchForLoginBtn() {
-        MainPage mp = new MainPage(driver);
         existElem = mp.checkExistButtonLogin();
     }
 
     @When("проверяю присутствие кнопки Связаться с нами")
     public void searchForContactBtn() {
-        MainPage mp = new MainPage(driver);
         existElem = mp.checkExistContactBtn();
     }
 
@@ -70,7 +68,6 @@ public class MainStepDef extends BaseStepDef {
 
     @When("перехожу на страницу с частыми вопросами")
     public void goToFaqPage() {
-        MainPage mp = new MainPage(driver);
         mp.clickGoToFaq();
     }
 
