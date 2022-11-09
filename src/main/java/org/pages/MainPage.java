@@ -30,4 +30,8 @@ public class MainPage extends BasePage {
     public int countContentElems() {
         return countElems(CONTAINER_CONTENTS);
     }
+
+    public void clickGoToAtm() {
+        clickElem(BUTTON_MAP);
+    }
 }
