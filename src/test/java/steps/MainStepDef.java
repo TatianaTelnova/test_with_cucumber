@@ -6,40 +6,39 @@ import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.pages.AtmPage;
+import org.pages.FaqPage;
 import org.pages.MainPage;
 
 public class MainStepDef extends BaseStepDef {
     private final WebDriver driver = setUp();
-    private Integer contentCount;
-    private Boolean exist;
+    private int elemCount;
+    private Boolean existElem;
 
     @Given("открыта главная страница")
     public void openMainPage() {
         driver.get("https://www.bspb.ru/");
     }
 
-    @When("я считаю количество элементов контента")
+    @When("считаю количество элементов контента")
     public void countContentElems() {
         MainPage mp = new MainPage(driver);
-        contentCount = mp.countContentElems();
+        elemCount = mp.countContentElems();
     }
 
     @Then("результат больше {int}")
     public void resultMustBeGreaterThanNumber(Integer number) {
-        Assert.assertTrue(contentCount > number);
+        Assert.assertTrue(elemCount > number);
         tearDown();
     }
 
-    @When("я перехожу на страницу с банкоматами")
+    @When("перехожу на страницу с банкоматами")
     public void goToAtmPage() {
         MainPage mp = new MainPage(driver);
         mp.clickGoToAtm();
-//        AtmPage ap = new AtmPage(driver);
-//        ap.clickAtmButton();
     }
 
-    @When("я снова кликаю на кнопку Списком")
-    public void  clickAtmBtn() {
+    @When("снова кликаю на кнопку Списком")
+    public void clickAtmBtn() {
         AtmPage ap = new AtmPage(driver);
         ap.clickAtmButton();
     }
@@ -51,15 +50,39 @@ public class MainStepDef extends BaseStepDef {
         tearDown();
     }
 
-    @When("я проверяю присутствие кнопки Войти")
+    @When("проверяю присутствие кнопки Войти")
     public void searchForLoginBtn() {
         MainPage mp = new MainPage(driver);
-        exist = mp.checkExistButtonLogin();
+        existElem = mp.checkExistButtonLogin();
+    }
+
+    @When("проверяю присутствие кнопки Связаться с нами")
+    public void searchForContactBtn() {
+        MainPage mp = new MainPage(driver);
+        existElem = mp.checkExistContactBtn();
     }
 
     @Then("результат должен быть Присутствует")
     public void resultMustBeTrue() {
-        Assert.assertTrue(exist);
+        Assert.assertTrue(existElem);
+        tearDown();
+    }
+
+    @When("перехожу на страницу с частыми вопросами")
+    public void goToFaqPage() {
+        MainPage mp = new MainPage(driver);
+        mp.clickGoToFaq();
+    }
+
+    @When("снова считаю количество блоков тем")
+    public void countBlocks() {
+        FaqPage fp = new FaqPage(driver);
+        elemCount = fp.countBlocks();
+    }
+
+    @Then("снова результат равен {int}")
+    public void faqEqualNumber(int number) {
+        Assert.assertEquals(number, elemCount);
         tearDown();
     }
 }

@@ -15,7 +15,7 @@ public class AtmStepDef extends BaseStepDef {
         driver.get("https://www.bspb.ru/map?is=bankomats");
     }
 
-    @When("я кликаю на кнопку Списком")
+    @When("кликаю на кнопку Списком")
     public void clickAtmBtn() {
         AtmPage ap = new AtmPage(driver);
         ap.clickAtmButton();
