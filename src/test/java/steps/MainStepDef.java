@@ -13,42 +13,42 @@ public class MainStepDef extends BaseStepDef {
     private Boolean exist;
 
     @Given("открыта главная страница")
-    public void i_am_on_the_main_page() {
+    public void openMainPage() {
         driver.get("https://www.bspb.ru/");
     }
 
     @When("я считаю количество элементов контента")
-    public void i_count_elements_in_a_content() {
+    public void countContentElems() {
         MainPage mp = new MainPage(driver);
         contentCount = mp.countContentElems();
     }
 
     @Then("результат больше {int}")
-    public void the_result_must_not_be_null(Integer number) {
+    public void resultMustBeGreaterThanNumber(Integer number) {
         Assert.assertTrue(contentCount > number);
         tearDown();
     }
 
     @When("я перехожу на страницу с банкоматами")
-    public void i_go_to_the_atm_page() {
+    public void goToAtmPage() {
         MainPage mp = new MainPage(driver);
         mp.clickGoToAtm();
     }
 
     @Then("я проверяю что-то")
-    public void check_anything() {
+    public void checkAnything() {
         Assert.assertTrue(true);
         tearDown();
     }
 
     @When("я проверяю присутствие кнопки Войти")
-    public void i_search_for() {
+    public void searchForLoginBtn() {
         MainPage mp = new MainPage(driver);
         exist = mp.checkExistButtonLogin();
     }
 
     @Then("результат должен быть Присутствует")
-    public void the_result_must_be_true() {
+    public void resultMustBeTrue() {
         Assert.assertTrue(exist);
         tearDown();
     }
