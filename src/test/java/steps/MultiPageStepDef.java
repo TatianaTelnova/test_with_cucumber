@@ -10,11 +10,17 @@ import org.pages.AtmPage;
 import org.pages.FaqPage;
 import org.pages.MainPage;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsToBe;
+
 public class MultiPageStepDef extends BaseStepDef {
     private MainPage mp;
     private FaqPage fp;
     private AtmPage ap;
     private int elemCount;
+    private final Set<String> windowHandles = new HashSet<>();
 
     @Before
     public void driverSetUp() {
@@ -44,19 +50,13 @@ public class MultiPageStepDef extends BaseStepDef {
         ap = new AtmPage(driver);
     }
 
-    @Given("открыта страница Demo личного кабинета")
-    public void openDemoPage() {
-        driver.get("https://idemo.bspb.ru/auth?response_type=code&client_id=1&redirect_uri=https%3A%2F%2Fidemo.bspb.ru%2Flogin%2Fsuccess&prefetch_uri=https%3A%2F%2Fidemo.bspb.ru%2Flogin%2Fprefetch&force_new_session=true");
-        mp = new MainPage(driver);
-    }
-
     @When("перехожу на страницу с частыми вопросами")
     public void goToFaqPage() {
         mp.clickGoToFaq();
     }
 
     @When("кликаю {string}")
-    public void clickAtmBtn(String elem) {
+    public void clickElem(String elem) {
         switch (elem) {
             case "Списком":
                 ap.clickAtmButton();
@@ -64,19 +64,38 @@ public class MultiPageStepDef extends BaseStepDef {
             case "первая тема":
                 fp.clickButtonBlock();
                 break;
+            case "Войти чк":
+                windowHandles.add(driver.getWindowHandle());
+                mp.clickLogin();
+                break;
+            case "Demo":
+                wait.until(numberOfWindowsToBe(windowHandles.size() + 1));
+                for (String windowHandle : driver.getWindowHandles()) {
+                    if (!windowHandles.contains(windowHandle)) {
+                        windowHandles.add(windowHandle);
+                        driver.switchTo().window(windowHandle);
+                        break;
+                    }
+                }
+                mp.clickContainerLogin();
+                break;
             case "Войти в лк":
+                wait.until(numberOfWindowsToBe(windowHandles.size() + 1));
+                for (String windowHandle : driver.getWindowHandles()) {
+                    if (!windowHandles.contains(windowHandle)) {
+                        windowHandles.add(windowHandle);
+                        driver.switchTo().window(windowHandle);
+                        break;
+                    }
+                }
                 mp.clickDemoLogin();
                 break;
-//            case "Demo":
-//                mp.clickLogin();
-//                break;
             case "Войти":
                 mp.clickDemoOtpLogin();
                 break;
             default:
                 break;
         }
-
     }
 
     @When("считаю {string}")
@@ -106,7 +125,7 @@ public class MultiPageStepDef extends BaseStepDef {
     }
 
     @Then("результат больше {int}")
-    public void resultMustBeGreaterThanNumber(Integer number) {
+    public void resultMustBeGreaterThanNumber(int number) {
         Assert.assertTrue(elemCount > number);
     }
 
