@@ -55,6 +55,7 @@ public class MultiPageStepDef extends BaseStepDef {
         mp.clickGoToFaq();
     }
 
+    // элемент по клику
     @When("кликаю {string}")
     public void clickElem(String elem) {
         switch (elem) {
