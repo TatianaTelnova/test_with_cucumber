@@ -5,12 +5,14 @@ import io.cucumber.java.Before;
 
 public class Hooks {
     @Before
-    public void beforeScenario(){
+    public void beforeScenario() {
         System.out.println("This will run before the Scenario");
+//        setUp();
     }
 
     @After
-    public void afterScenario(){
+    public void afterScenario() {
         System.out.println("This will run after the Scenario");
+//        tearDown();
     }
 }

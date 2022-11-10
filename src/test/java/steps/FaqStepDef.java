@@ -22,14 +22,18 @@ public class FaqStepDef extends BaseStepDef {
         fp.clickButtonBlock();
     }
 
-    @When("считаю (блоки тем)")
-    public void countBlocks() {
-        elemCount = fp.countBlocks();
-    }
-
-    @When("считаю (частые вопросы)")
-    public void countFaq() {
-        elemCount = fp.countFaq();
+    @When("считаю {string}")
+    public void countElems(String elems) {
+        switch (elems) {
+            case "вопросы":
+                elemCount = fp.countFaq();
+                break;
+            case "темы":
+                elemCount = fp.countBlocks();
+                break;
+            default:
+                break;
+        }
     }
 
     @When("считаю количество отфильтрованных частых вопросов")
@@ -37,7 +41,7 @@ public class FaqStepDef extends BaseStepDef {
         elemCount = fp.countFaqWithFilter();
     }
 
-    @Then("количество частых вопросов должно быть меньше {int}")
+    @Then("результат меньше {int}")
     public void faqMustBeLessThanNumber(int number) {
         Assert.assertTrue(elemCount < number);
         tearDown();

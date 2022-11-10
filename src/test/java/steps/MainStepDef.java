@@ -12,7 +12,6 @@ import org.pages.MainPage;
 public class MainStepDef extends BaseStepDef {
     private MainPage mp;
     private int elemCount;
-    private Boolean existElem;
 
     @Given("открыта главная страница")
     public void openMainPage() {
@@ -32,54 +31,44 @@ public class MainStepDef extends BaseStepDef {
         tearDown();
     }
 
-    @When("перехожу на страницу с банкоматами")
-    public void goToAtmPage() {
-        mp.clickGoToAtm();
-    }
-
-    @When("снова кликаю на кнопку Списком")
-    public void clickAtmBtn() {
-        AtmPage ap = new AtmPage(driver);
-        ap.clickAtmButton();
-    }
-
-    @Then("снова количество адресов банкоматов равно {int}")
-    public void atmMustBeEqualNumber(int number) {
-        AtmPage ap = new AtmPage(driver);
-        Assert.assertEquals(number, ap.countAtm());
-        tearDown();
-    }
-
-    @When("проверяю присутствие кнопки Войти")
-    public void searchForLoginBtn() {
-        existElem = mp.checkExistButtonLogin();
-    }
-
-    @When("проверяю присутствие кнопки Связаться с нами")
-    public void searchForContactBtn() {
-        existElem = mp.checkExistContactBtn();
-    }
-
-    @Then("результат должен быть Присутствует")
-    public void resultMustBeTrue() {
-        Assert.assertTrue(existElem);
-        tearDown();
-    }
-
     @When("перехожу на страницу с частыми вопросами")
     public void goToFaqPage() {
         mp.clickGoToFaq();
     }
 
-    @When("снова считаю количество блоков тем")
-    public void countBlocks() {
+    @When("снова считаю {string}")
+    public void countElemsFP(String elems) {
         FaqPage fp = new FaqPage(driver);
-        elemCount = fp.countBlocks();
+        switch (elems) {
+            case "вопросы":
+                elemCount = fp.countFaq();
+                break;
+            case "темы":
+                elemCount = fp.countBlocks();
+                break;
+            default:
+                break;
+        }
     }
 
     @Then("снова результат равен {int}")
     public void faqEqualNumber(int number) {
         Assert.assertEquals(number, elemCount);
+        tearDown();
+    }
+
+    @Then("{string} присутствует на странице")
+    public void checkLoginBtn(String elems) {
+        switch (elems) {
+            case "Войти":
+                Assert.assertTrue(mp.checkExistButtonLogin());
+                break;
+            case "Связаться с нами":
+                Assert.assertTrue(mp.checkExistContactBtn());
+                break;
+            default:
+                break;
+        }
         tearDown();
     }
 }
