@@ -8,19 +8,19 @@ import org.openqa.selenium.WebElement;
 public class BasePage {
     protected WebDriver driver;
 
-   public BasePage(WebDriver driver) {
+    public BasePage(WebDriver driver) {
         this.driver = driver;
     }
 
-    public int countElems(By elem) {
+    protected int countElems(By elem) {
         return driver.findElements(elem).size();
     }
 
-    public void clickElem(By elem) {
+    protected void clickElem(By elem) {
         driver.findElement(elem).click();
     }
 
-    public boolean checkExist(By elem) {
+    protected boolean checkExist(By elem) {
         try {
             driver.findElement(elem);
             return true;
@@ -29,11 +29,11 @@ public class BasePage {
         }
     }
 
-    public String getText(By elem) {
+    protected String getText(By elem) {
         return driver.findElement(elem).getAttribute("innerText");
     }
 
-    public WebElement getElem(By elem) {
+    protected WebElement getElem(By elem) {
         return driver.findElement(elem);
     }
 }

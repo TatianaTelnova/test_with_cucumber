@@ -1,14 +1,14 @@
 package org.pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 public class MainPage extends BasePage {
     protected WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -36,15 +36,29 @@ public class MainPage extends BasePage {
         return countElems(CONTAINER_CONTENTS);
     }
 
-    public void clickGoToAtm() {
-        clickElem(BUTTON_MAP);
-    }
-
     public void clickGoToFaq() {
         WebElement we = getElem(BUTTON_CARDS);
         Actions action = new Actions(driver);
         action.moveToElement(we).perform();
         action.moveToElement(getElem(BUTTON_FAQ)).click().perform();
+    }
+
+    public void clickLogin() {
+        clickElem(BUTTON_LOGIN);
+    }
+
+    public void clickContainerLogin() {
+        clickElem(CONTAINER_LOGIN);
+    }
+
+    public void clickDemoLogin() {
+        wait.until(visibilityOfElementLocated(DEMO_LOGIN));
+        clickElem(DEMO_LOGIN);
+    }
+
+    public void clickDemoOtpLogin() {
+        wait.until(visibilityOfElementLocated(DEMO_OTP_LOGIN));
+        clickElem(DEMO_OTP_LOGIN);
     }
 
     public boolean checkExistContactBtn() {
@@ -54,5 +68,13 @@ public class MainPage extends BasePage {
         Actions action = new Actions(driver);
         action.scrollByAmount(0, deltaY).perform();
         return checkExist(BUTTON_CONTACT);
+    }
+
+    public String getUserName() {
+        try {
+            Alert alert = driver.switchTo().alert();
+            alert.accept();
+        } catch (NoAlertPresentException ignored) {}
+        return getText(USER_NAME);
     }
 }
