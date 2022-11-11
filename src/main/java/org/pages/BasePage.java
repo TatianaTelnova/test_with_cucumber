@@ -10,7 +10,7 @@ import java.time.Duration;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 
-public class BasePage {
+public abstract class BasePage {
     protected WebDriver driver;
     protected WebDriverWait wait;
 
@@ -19,31 +19,56 @@ public class BasePage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    protected int countElems(By elem) {
-        wait.until(elementToBeClickable(elem));
-        return driver.findElements(elem).size();
+    protected int countElems() {
+        wait.until(elementToBeClickable(UniPage.CONTAINER_CONTENTS));
+        return driver.findElements(UniPage.CONTAINER_CONTENTS).size();
     }
 
-    protected void clickElem(By elem) {
-        wait.until(elementToBeClickable(elem));
-        driver.findElement(elem).click();
+    protected int countElemsByClassName(String classname) {
+        wait.until(elementToBeClickable(By.className(classname)));
+        return driver.findElements(By.className(classname)).size();
     }
 
-    protected boolean checkExist(By elem) {
+    protected void clickElemByClassName(String classname) {
+        wait.until(elementToBeClickable(By.className(classname)));
+        driver.findElement(By.className(classname)).click();
+    }
+
+    protected void clickElemByClassName(String classname, int idx) {
+        wait.until(elementToBeClickable(By.className(classname)));
+        driver.findElements(By.className(classname)).get(idx).click();
+    }
+
+    protected void clickElemById(String id) {
+        wait.until(elementToBeClickable(By.id(id)));
+        driver.findElement(By.id(id)).click();
+    }
+
+    protected boolean checkExistByClassName(String classname) {
         try {
-            driver.findElement(elem);
+            driver.findElement(By.className(classname));
             return true;
         } catch (NoSuchElementException e) {
             return false;
         }
     }
 
-    protected String getText(By elem) {
-        return driver.findElement(elem).getAttribute("innerText");
+    protected WebElement getElemByClassName(String classname) {
+        wait.until(elementToBeClickable(By.className(classname)));
+        return driver.findElement(By.className(classname));
     }
 
-    protected WebElement getElem(By elem) {
-        wait.until(elementToBeClickable(elem));
-        return driver.findElement(elem);
+    protected WebElement getElemByClassName(String classname, int idx) {
+        wait.until(elementToBeClickable(By.className(classname)));
+        return driver.findElements(By.className(classname)).get(idx);
+    }
+
+    protected WebElement getElemById() {
+        wait.until(elementToBeClickable(By.id("popover-trigger-4")));
+        return driver.findElement(By.id("popover-trigger-4"));
+    }
+
+    protected String getText(String id) {
+        return driver.findElement(By.id(id)).getAttribute("innerText");
     }
 }
