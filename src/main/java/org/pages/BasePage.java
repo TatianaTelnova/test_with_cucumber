@@ -4,17 +4,18 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 
-public class BasePage {
+public abstract class BasePage {
     protected WebDriver driver;
     protected WebDriverWait wait;
 
-    public BasePage(WebDriver driver) {
+    protected BasePage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
@@ -25,12 +26,19 @@ public class BasePage {
     }
 
     protected void clickElem(By elem) {
-        wait.until(elementToBeClickable(elem));
+        WebElement we = getElem(elem);
+        int deltaY = we.getRect().y;
+        Actions action = new Actions(driver);
+        action.scrollByAmount(0, deltaY).perform();
         driver.findElement(elem).click();
     }
 
     protected boolean checkExist(By elem) {
         try {
+            WebElement we = getElem(elem);
+            int deltaY = we.getRect().y;
+            Actions action = new Actions(driver);
+            action.scrollByAmount(0, deltaY).perform();
             driver.findElement(elem);
             return true;
         } catch (NoSuchElementException e) {

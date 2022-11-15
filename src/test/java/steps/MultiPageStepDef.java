@@ -36,6 +36,7 @@ public class MultiPageStepDef extends BaseStepDef {
     public void openMainPage() {
         driver.get("https://www.bspb.ru/");
         mp = new MainPage(driver);
+        windowHandles.add(driver.getWindowHandle());
     }
 
     @Given("открыта страница с частыми вопросами")
@@ -50,79 +51,60 @@ public class MultiPageStepDef extends BaseStepDef {
         ap = new AtmPage(driver);
     }
 
-    @When("перехожу на страницу с частыми вопросами")
-    public void goToFaqPage() {
-        mp.clickGoToFaq();
-    }
-
-    // элемент по клику
-    @When("кликаю {string}")
-    public void clickElem(String elem) {
-        switch (elem) {
-            case "Списком":
-                ap.clickAtmButton();
+    @When("перехожу на открытую вкладку")
+    public void goToTab() {
+        wait.until(numberOfWindowsToBe(windowHandles.size() + 1));
+        for (String windowHandle : driver.getWindowHandles()) {
+            if (!windowHandles.contains(windowHandle)) {
+                windowHandles.add(windowHandle);
+                driver.switchTo().window(windowHandle);
                 break;
-            case "первая тема":
-                fp.clickButtonBlock();
-                break;
-            case "Войти чк":
-                windowHandles.add(driver.getWindowHandle());
-                mp.clickLogin();
-                break;
-            case "Demo":
-                wait.until(numberOfWindowsToBe(windowHandles.size() + 1));
-                for (String windowHandle : driver.getWindowHandles()) {
-                    if (!windowHandles.contains(windowHandle)) {
-                        windowHandles.add(windowHandle);
-                        driver.switchTo().window(windowHandle);
-                        break;
-                    }
-                }
-                mp.clickContainerLogin();
-                break;
-            case "Войти в лк":
-                wait.until(numberOfWindowsToBe(windowHandles.size() + 1));
-                for (String windowHandle : driver.getWindowHandles()) {
-                    if (!windowHandles.contains(windowHandle)) {
-                        windowHandles.add(windowHandle);
-                        driver.switchTo().window(windowHandle);
-                        break;
-                    }
-                }
-                mp.clickDemoLogin();
-                break;
-            case "Войти":
-                mp.clickDemoOtpLogin();
-                break;
-            default:
-                break;
+            }
         }
     }
 
-    @When("считаю {string}")
-    public void countElems(String elems) {
-        switch (elems) {
-            case "вопросы":
-                fp = new FaqPage(driver);
-                elemCount = fp.countFaq();
-                break;
-            case "темы":
-                fp = new FaqPage(driver);
-                elemCount = fp.countBlocks();
-                break;
-            case "отфильтрованные вопросы":
-                fp = new FaqPage(driver);
-                elemCount = fp.countFaqWithFilter();
-                break;
-            case "элементы контента":
-                elemCount = mp.countContentElems();
-                break;
-            case "адреса банкоматов":
-                elemCount = ap.countAtm();
-                break;
-            default:
-                break;
-        }
+    @When("кликаю на {string}, выбираю {string}")
+    public void goToPage(String nav, String elem) {
+        mp.clickGoToFaq(nav, elem);
+    }
+
+    @When("кликаю main {string}")
+    public void clickMainElem(String elem) {
+        mp.clickMain(elem);
+    }
+
+    @When("кликаю faq {string}")
+    public void clickFaqElem(String elem) {
+        fp.clickFaq(elem);
+    }
+
+    @When("кликаю atm {string}")
+    public void clickAtmElem(String elem) {
+        ap.clickAtm(elem);
+    }
+
+    @When("считаю faq {string}")
+    public void countFaqElems(String elems) {
+        fp = new FaqPage(driver);
+        elemCount = fp.countFaq(elems);
+    }
+
+    @When("считаю отфильтрованные faq {string}")
+    public void countFaqElemsWithFilter(String elems) {
+        fp = new FaqPage(driver);
+        elemCount = fp.countFaqWithFilter(elems);
+    }
+
+    @When("считаю main {string}")
+    public void countMainElems(String elems) {
+        mp = new MainPage(driver);
+        elemCount = mp.countMain(elems);
+    }
+
+    @When("считаю atm {string}")
+    public void countAtmElems(String elems) {
+        ap = new AtmPage(driver);
+        elemCount = ap.countAtm(elems);
     }
 
     @Then("результат больше {int}")
@@ -142,22 +124,13 @@ public class MultiPageStepDef extends BaseStepDef {
     }
 
     @Then("{string} присутствует на странице")
-    public void checkLoginBtn(String elems) {
-        switch (elems) {
-            case "Войти":
-                Assert.assertTrue(mp.checkExistButtonLogin());
-                break;
-            case "Связаться с нами":
-                Assert.assertTrue(mp.checkExistContactBtn());
-                break;
-            default:
-                break;
-        }
+    public void checkBtn(String elem) {
+        Assert.assertTrue(mp.checkExistMain(elem));
     }
 
-    @Then("имя пользователя равно {string}")
-    public void userName(String username) {
-        System.out.println(mp.getUserName().trim());
-        Assert.assertEquals(username, mp.getUserName().trim());
+    @Then("текст внутри {string} равен {string}")
+    public void userName(String elem, String username) {
+        System.out.println(mp.getTextMain(elem).trim());
+        Assert.assertEquals(username, mp.getTextMain(elem).trim());
     }
 }
