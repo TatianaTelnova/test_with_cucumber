@@ -16,9 +16,6 @@ import java.util.Set;
 import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsToBe;
 
 public class MultiPageStepDef extends BaseStepDef {
-    private MainPage mp;
-    private FaqPage fp;
-    private AtmPage ap;
     private int elemCount;
     private final Set<String> windowHandles = new HashSet<>();
 
@@ -35,20 +32,17 @@ public class MultiPageStepDef extends BaseStepDef {
     @Given("открыта главная страница")
     public void openMainPage() {
         driver.get("https://www.bspb.ru/");
-        mp = new MainPage(driver);
         windowHandles.add(driver.getWindowHandle());
     }
 
     @Given("открыта страница с частыми вопросами")
     public void openFaqPage() {
         driver.get("https://www.bspb.ru/retail/faq");
-        fp = new FaqPage(driver);
     }
 
     @Given("открыта страница с адресами банкоматов")
     public void openAtmPage() {
         driver.get("https://www.bspb.ru/map?is=bankomats");
-        ap = new AtmPage(driver);
     }
 
     @When("перехожу на открытую вкладку")
@@ -65,46 +59,40 @@ public class MultiPageStepDef extends BaseStepDef {
 
     @When("кликаю на {string}, выбираю {string}")
     public void goToPage(String nav, String elem) {
-        mp.clickGoToFaq(nav, elem);
+        new  MainPage(driver).clickGoToFaq(nav, elem);
     }
 
-    @When("кликаю main {string}")
-    public void clickMainElem(String elem) {
-        mp.clickMain(elem);
+    @When("кликаю {string}")
+    public void clickEveryElem(String elem) {
+        AtmPage ap = new AtmPage(driver);
+        FaqPage fp = new FaqPage(driver);
+        MainPage mp = new  MainPage(driver);
+        if (ap.checkMap(elem)) {
+            ap.clickAtm(elem);
+        } else if (fp.checkMap(elem)) {
+            fp.clickFaq(elem);
+        } else if (mp.checkMap(elem)) {
+            mp.clickMain(elem);
+        }
     }
 
-    @When("кликаю faq {string}")
-    public void clickFaqElem(String elem) {
-        fp.clickFaq(elem);
-    }
-
-    @When("кликаю atm {string}")
-    public void clickAtmElem(String elem) {
-        ap.clickAtm(elem);
-    }
-
-    @When("считаю faq {string}")
-    public void countFaqElems(String elems) {
-        fp = new FaqPage(driver);
-        elemCount = fp.countFaq(elems);
+    @When("считаю {string}")
+    public void countEveryElems(String elems) {
+        AtmPage ap = new AtmPage(driver);
+        FaqPage fp = new FaqPage(driver);
+        MainPage mp = new  MainPage(driver);
+        if (ap.checkMap(elems)) {
+            elemCount = ap.countAtm(elems);
+        } else if (fp.checkMap(elems)) {
+            elemCount = fp.countFaq(elems);
+        } else if (mp.checkMap(elems)) {
+            elemCount = mp.countMain(elems);
+        }
     }
 
     @When("считаю отфильтрованные faq {string}")
     public void countFaqElemsWithFilter(String elems) {
-        fp = new FaqPage(driver);
-        elemCount = fp.countFaqWithFilter(elems);
-    }
-
-    @When("считаю main {string}")
-    public void countMainElems(String elems) {
-        mp = new MainPage(driver);
-        elemCount = mp.countMain(elems);
-    }
-
-    @When("считаю atm {string}")
-    public void countAtmElems(String elems) {
-        ap = new AtmPage(driver);
-        elemCount = ap.countAtm(elems);
+        elemCount = new FaqPage(driver).countFaqWithFilter(elems);
     }
 
     @Then("результат больше {int}")
@@ -119,18 +107,18 @@ public class MultiPageStepDef extends BaseStepDef {
     }
 
     @Then("результат равен {int}")
-    public void faqEqualNumber(int number) {
+    public void resultEqualNumber(int number) {
         Assert.assertEquals(number, elemCount);
     }
 
     @Then("{string} присутствует на странице")
-    public void checkBtn(String elem) {
-        Assert.assertTrue(mp.checkExistMain(elem));
+    public void checkResult(String elem) {
+        Assert.assertTrue(new MainPage(driver).checkExistMain(elem));
     }
 
     @Then("текст внутри {string} равен {string}")
     public void userName(String elem, String username) {
-        System.out.println(mp.getTextMain(elem).trim());
-        Assert.assertEquals(username, mp.getTextMain(elem).trim());
+        System.out.println(new MainPage(driver).getTextMain(elem).trim());
+        Assert.assertEquals(username, new MainPage(driver).getTextMain(elem).trim());
     }
 }

@@ -20,6 +20,10 @@ public class FaqPage extends BasePage {
         super(driver);
     }
 
+    public boolean checkMap(String elem) {
+        return mapFaqPage.containsKey(elem);
+    }
+
     public void clickFaq(String elem) {
         clickElem(mapFaqPage.get(elem));
     }

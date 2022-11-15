@@ -25,6 +25,10 @@ public class MainPage extends BasePage {
         super(driver);
     }
 
+    public boolean checkMap(String elem) {
+        return mapMainPage.containsKey(elem);
+    }
+
     public int countMain(String elems) {
         return countElems(mapMainPage.get(elems));
     }

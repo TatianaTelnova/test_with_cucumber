@@ -16,6 +16,10 @@ public class AtmPage extends BasePage {
         }
     };
 
+    public boolean checkMap(String elem) {
+        return mapAtmPage.containsKey(elem);
+    }
+
     public AtmPage(WebDriver driver) {
         super(driver);
     }
