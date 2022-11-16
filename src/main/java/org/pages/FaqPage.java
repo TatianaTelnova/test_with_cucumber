@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class FaqPage extends BasePage {
 
-    private HashMap<String, By> mapFaqPage = new HashMap<>() {
+    private final HashMap<String, By> mapFaqPage = new HashMap<>() {
         {
             put("первая тема", By.id("accordion-button-17"));
             put("темы", By.className("css-1sfe36n"));

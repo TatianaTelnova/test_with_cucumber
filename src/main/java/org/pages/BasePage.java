@@ -26,19 +26,20 @@ public abstract class BasePage {
     }
 
     protected void clickElem(By elem) {
-        WebElement we = getElem(elem);
-        int deltaY = we.getRect().y;
-        Actions action = new Actions(driver);
-        action.scrollByAmount(0, deltaY).perform();
+        scroll(elem);
         driver.findElement(elem).click();
+    }
+
+    protected void clickElemWithFilter(By nav, By elem) {
+        WebElement we = getElem(nav);
+        Actions action = new Actions(driver);
+        action.moveToElement(we).perform();
+        action.moveToElement(getElem(elem)).click().perform();
     }
 
     protected boolean checkExist(By elem) {
         try {
-            WebElement we = getElem(elem);
-            int deltaY = we.getRect().y;
-            Actions action = new Actions(driver);
-            action.scrollByAmount(0, deltaY).perform();
+            scroll(elem);
             driver.findElement(elem);
             return true;
         } catch (NoSuchElementException e) {
@@ -53,5 +54,12 @@ public abstract class BasePage {
     protected WebElement getElem(By elem) {
         wait.until(elementToBeClickable(elem));
         return driver.findElement(elem);
+    }
+
+    private void scroll(By elem) {
+        WebElement we = getElem(elem);
+        int deltaY = we.getRect().y;
+        Actions action = new Actions(driver);
+        action.scrollByAmount(0, deltaY).perform();
     }
 }

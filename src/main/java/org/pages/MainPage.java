@@ -1,12 +1,11 @@
 package org.pages;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
 
 import java.util.HashMap;
 
 public class MainPage extends BasePage {
-    private HashMap<String, By> mapMainPage = new HashMap<>() {
+    private final HashMap<String, By> mapMainPage = new HashMap<>() {
         {
             put("Войти", By.className("css-sy2ljg"));
             put("Связаться с нами", By.className("css-ndfch2"));
@@ -34,10 +33,7 @@ public class MainPage extends BasePage {
     }
 
     public void clickGoToFaq(String nav, String elem) {
-        WebElement we = getElem(mapMainPage.get(nav));
-        Actions action = new Actions(driver);
-        action.moveToElement(we).perform();
-        action.moveToElement(getElem(mapMainPage.get(elem))).click().perform();
+        clickElemWithFilter(mapMainPage.get(nav), mapMainPage.get(elem));
     }
 
     public void clickMain(String elem) {

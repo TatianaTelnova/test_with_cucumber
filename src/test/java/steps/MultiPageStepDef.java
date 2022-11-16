@@ -45,6 +45,11 @@ public class MultiPageStepDef extends BaseStepDef {
         driver.get("https://www.bspb.ru/map?is=bankomats");
     }
 
+    @When("ждем")
+    public void waitWait() {
+        System.out.println("Wait");
+    }
+
     @When("перехожу на открытую вкладку")
     public void goToTab() {
         wait.until(numberOfWindowsToBe(windowHandles.size() + 1));
