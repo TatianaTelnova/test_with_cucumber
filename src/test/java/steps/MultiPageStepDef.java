@@ -5,11 +5,15 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.junit.Assert;
+import io.qameta.allure.Attachment;
+import org.assertj.core.api.*;
 import org.pages.AtmPage;
 import org.pages.FaqPage;
 import org.pages.MainPage;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -102,28 +106,54 @@ public class MultiPageStepDef extends BaseStepDef {
 
     @Then("результат больше {int}")
     public void resultMustBeGreaterThanNumber(int number) {
-        Assert.assertTrue(elemCount > number);
+        Assertions.assertThat(elemCount).isGreaterThan(number);
     }
 
     @Then("результат меньше {int}")
     public void resultMustBeLessThanNumber(int number) {
-        Assert.assertTrue(elemCount < number);
-        tearDown();
+        Assertions.assertThat(elemCount).isLessThan(number);
     }
 
     @Then("результат равен {int}")
     public void resultEqualNumber(int number) {
-        Assert.assertEquals(number, elemCount);
+        Assertions.assertThat(number).isEqualTo(elemCount);
     }
 
     @Then("{string} присутствует на странице")
     public void checkResult(String elem) {
-        Assert.assertTrue(new MainPage(driver).checkExistMain(elem));
+        Assertions.assertThat(new MainPage(driver).checkExistMain(elem)).isTrue();
     }
 
     @Then("текст внутри {string} равен {string}")
     public void userName(String elem, String username) {
         System.out.println(new MainPage(driver).getTextMain(elem).trim());
-        Assert.assertEquals(username, new MainPage(driver).getTextMain(elem).trim());
+        Assertions.assertThat(new MainPage(driver).getTextMain(elem)).isEqualToIgnoringWhitespace(username);
+    }
+
+    @Attachment
+    public static byte[] getBytes(String resourceName) throws IOException {
+        return Files.readAllBytes(Paths.get("src/main/resources", resourceName));
+    }
+
+    @Then("тест-пример {int}")
+    public void checkResult(int num) throws IOException {
+        switch (num) {
+            case 1:
+                Assertions.assertThat(7).isEqualTo(7);
+                getBytes("cat.txt");
+                getBytes("parrot.jpg");
+                break;
+            case 2:
+                Assertions.assertThat("Что-то что").isEqualTo("что-то что");
+                break;
+            case 3:
+                Assertions.assertThat("Что-то что").isEqualToIgnoringWhitespace("       Что-то что");
+                break;
+            case 4:
+                driver.get("https://www.bspb.ru/");
+                Assertions.assertThat(new MainPage(driver).checkExistMain("asdfghjk")).isTrue();
+            default:
+                break;
+        }
     }
 }
