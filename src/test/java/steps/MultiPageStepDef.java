@@ -14,6 +14,7 @@ import org.pages.MainPage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,6 +23,8 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsT
 public class MultiPageStepDef extends BaseStepDef {
     private int elemCount;
     private final Set<String> windowHandles = new HashSet<>();
+
+    private HashMap<String, Integer> paramMap = new HashMap<>();
 
     @Before
     public void driverSetUp() {
@@ -68,14 +71,14 @@ public class MultiPageStepDef extends BaseStepDef {
 
     @When("кликаю на {string}, выбираю {string}")
     public void goToPage(String nav, String elem) {
-        new  MainPage(driver).clickGoToFaq(nav, elem);
+        new MainPage(driver).clickGoToFaq(nav, elem);
     }
 
     @When("кликаю {string}")
     public void clickEveryElem(String elem) {
         AtmPage ap = new AtmPage(driver);
         FaqPage fp = new FaqPage(driver);
-        MainPage mp = new  MainPage(driver);
+        MainPage mp = new MainPage(driver);
         if (ap.checkMap(elem)) {
             ap.clickAtm(elem);
         } else if (fp.checkMap(elem)) {
@@ -89,7 +92,7 @@ public class MultiPageStepDef extends BaseStepDef {
     public void countEveryElems(String elems) {
         AtmPage ap = new AtmPage(driver);
         FaqPage fp = new FaqPage(driver);
-        MainPage mp = new  MainPage(driver);
+        MainPage mp = new MainPage(driver);
         if (ap.checkMap(elems)) {
             elemCount = ap.countAtm(elems);
         } else if (fp.checkMap(elems)) {
@@ -99,19 +102,19 @@ public class MultiPageStepDef extends BaseStepDef {
         }
     }
 
-    @When("считаю отфильтрованные faq {string}")
-    public void countFaqElemsWithFilter(String elems) {
-        elemCount = new FaqPage(driver).countFaqWithFilter(elems);
+    @When("сохраняю в {string}")
+    public void storeAs(String key) {
+        paramMap.put(key, elemCount);
+    }
+
+    @When("считаю {string} когда их меньше чем в {string}")
+    public void resultMustBeLessThanInVal(String elem, String val) {
+        elemCount = new FaqPage(driver).countFaqWithFilter(elem, paramMap.get(val));
     }
 
     @Then("результат больше {int}")
     public void resultMustBeGreaterThanNumber(int number) {
         Assertions.assertThat(elemCount).isGreaterThan(number);
-    }
-
-    @Then("результат меньше {int}")
-    public void resultMustBeLessThanNumber(int number) {
-        Assertions.assertThat(elemCount).isLessThan(number);
     }
 
     @Then("результат равен {int}")
@@ -126,7 +129,6 @@ public class MultiPageStepDef extends BaseStepDef {
 
     @Then("текст внутри {string} равен {string}")
     public void userName(String elem, String username) {
-        System.out.println(new MainPage(driver).getTextMain(elem).trim());
         Assertions.assertThat(new MainPage(driver).getTextMain(elem)).isEqualToIgnoringWhitespace(username);
     }
 

@@ -32,8 +32,8 @@ public class FaqPage extends BasePage {
         return countElems(mapFaqPage.get(elem));
     }
 
-    public int countFaqWithFilter(String elem) {
-        wait.until((ExpectedCondition<Boolean>) driver -> countElems(mapFaqPage.get(elem)) != 100);
+    public int countFaqWithFilter(String elem, Integer val) {
+        wait.until((ExpectedCondition<Boolean>) driver -> countElems(mapFaqPage.get(elem)) != val);
         return countElems(mapFaqPage.get(elem));
     }
 }
